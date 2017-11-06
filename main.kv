@@ -1,0 +1,156 @@
+#:import NoTransition kivy.uix.screenmanager.NoTransition
+#:import lv kivy.uix.listview
+#:import la kivy.adapters.listadapter
+<ListViewModal>:
+    list_view: list_view_id
+    size_hint: None,None
+    size: 400,400
+    ListView:
+        id: list_view_id
+        size_hint: .8,.8
+        adapter:
+            la.ListAdapter(
+            data=["Item #{0}".format(i) for i in xrange(100)],
+            selection_mode='single',
+            allow_empty_selection=False,
+            cls=lv.ListItemButton)
+
+<LabHelper>:
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            spacing: 5
+            padding: '20dp'
+            BoxLayout:
+                orientation: 'vertical'
+                padding: 10
+                margin: 10
+                BoxLayout:
+                    spacing: 15
+                    Image:
+                        size_hint: .4, 1
+                        source: './src/assets/Biohack_logo.png'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        Label:
+                            markup: True
+                            bold: True
+                            halign: 'left'
+                            text_size: self.size
+                            text: "[color=7C8FCD]London[/color]"
+                        Label:
+                            markup: True
+                            bold: True
+                            halign: 'left'
+                            valign: 'top'
+                            font_size: 28
+                            text_size: self.size
+                            text: "[color=000000]BIOHACKSPACE[/color]"
+                Label:
+                    size_hint: (1, .1)
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    LabTextInput:
+                        id: user_name
+                        hint_text: "Name"
+                        nick: "k"
+                        border: [10, 10, 10, 10]
+                        multiline: False
+                        size_hint_x: .9
+                        padding: self.size[1]/4
+                        background_active: './src/assets/active.png'
+                        background_normal: './src/assets/back.png'
+
+                    Label:
+                        size_hint: 1, .5
+                    LabTextInput:
+                        id: substance_name
+                        hint_text: "Substance Name"
+                        multiline: False
+                        border: [10, 10, 10, 10]
+                        size_hint_x: .9
+                        padding: self.size[1]/4
+                        background_active: './src/assets/active.png'
+                        background_normal: './src/assets/back.png'
+
+            ScreenManager:
+                id: sm
+                transition: NoTransition()
+                duration: 0
+
+                Screen:
+                    name: "checkboxes"
+                    BoxLayout:
+                        orientation: "vertical"
+                        GridLayout:
+                            size_hint: (1, .6)
+                            cols: 2
+                            spacing: -10
+                            CheckBox:
+                                id: dangerous_checkbox
+                                group: 'is_dangerous'
+                                allow_no_selection: False
+                                active: True
+                                background_radio_down: './src/assets/active_checkbox.png'
+                            Label:
+                                markup: True
+                                halign: 'left'
+                                valign: 'center'
+                                text_size: self.size
+                                text: "[color=000000]DANGEROUS[/color]"
+                            CheckBox:
+                                id: non_dangerous_checkbox
+                                allow_no_selection: False
+                                group: 'is_dangerous'
+                                background_radio_down: './src/assets/active_checkbox.png'
+                            Label:
+                                markup: True
+                                halign: 'left'
+                                valign: 'center'
+                                text_size: self.size
+                                text: "[color=000000]NON DANGEROUS[/color]"
+                        Label:
+                            size_hint: (1, .3)
+                        BoxLayout:
+                            size_hint: (1, .3)
+                            padding: 5
+                            margin: 5
+                            spacing: 100
+                            Button:
+                                text: "Clear"
+                                bold: True
+                                background_normal: './src/assets/b.png'
+                                on_release: user_name.text = ''; substance_name.text = ''
+                            Button:
+                                text: "Print"
+                                bold: True
+                                background_normal: './src/assets/b.png'
+                                on_release: root.onPrintReportReleased()
+
+                Screen:
+                    name: "suggestions"
+                    BoxLayout:
+                        SuggestionsList:
+                            id: suggestions_list
+
+        ScreenManager:
+            id: screen_manager
+            transition: NoTransition()
+            duration: 0
+            size_hint: 1, .9
+            Screen:
+                name: "keyboard_buttons"
+                KeyboardLayout:
+                    id: keyboard_buttons
+            Screen:
+                name: "numeric_keyboard"
+                NumericKeyboard:
+                    id: numeric_keyboard
